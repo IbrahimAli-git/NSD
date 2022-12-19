@@ -13,10 +13,9 @@ public class Client {
 
     public static void run(){
         try (Socket socket = new Socket(host, port);
-            PrintWriter pr = new PrintWriter(socket.getOutputStream());
-            BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+            PrintWriter pr = new PrintWriter(socket.getOutputStream(), true);
+            BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
-
         )
         {
         String message = "";

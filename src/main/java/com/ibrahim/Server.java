@@ -11,24 +11,36 @@ import java.util.Scanner;
 // Push code to GitHub
 // Exception handling
 // Create a gui
-
+// EDIT CONFIG ALLOW MULTIPLE INSTANCES
 public class Server {
     private static final int port = 1234;
+    // use a client handler which implements runnable for each client that interacts with the
+    // // use a server thread which implements runnable for each client that interacts with the
+    // check week 8 code
+    // it needs to be multithreaded
+
+
+    public static void readToFile(){
+
+    }
+
+    public static void writeFromFile(){
+
+    }
+
 
     public static void run() {
         String message = "";
 
         try (ServerSocket serverSocket = new ServerSocket(port);
-             Socket socket = serverSocket.accept();
-             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-             PrintWriter pr = new PrintWriter(socket.getOutputStream());
+             Socket clientSocket = serverSocket.accept();
+             PrintWriter pr = new PrintWriter(clientSocket.getOutputStream(), true);
+             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         ) {
-
             while ((message = in.readLine()) != null){
                 pr.println(message);
-                System.out.println("Server: " + in.readLine());
+                System.out.println("Server: " + message);
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
