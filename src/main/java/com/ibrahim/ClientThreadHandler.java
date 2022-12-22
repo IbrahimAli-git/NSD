@@ -26,26 +26,22 @@ public class ClientThreadHandler implements Runnable {
 
     @Override
     public void run() {
-
-    }
-
-    public void close(){
-        clientThreadHandlers.remove(this);
+        String message;
         try {
-            printWriter.close();
-            bufferedReader.close();
-            socket.close();
+            while (socket.isConnected()) {
+                message = bufferedReader.readLine();
+                printMessage(message);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void printMessage(String message, ClientThreadHandler handler){
+
+    public void printMessage(String message) {
         for (ClientThreadHandler clientThreadHandler : clientThreadHandlers) {
-            if (clientThreadHandler != handler){
-                printWriter.println(message);
-                printWriter.flush();
-            }
+            clientThreadHandler.printWriter.println(message);
+            clientThreadHandler.printWriter.flush();
         }
     }
 }

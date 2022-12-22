@@ -5,17 +5,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-
+import java.util.Scanner;
 
 public class Client {
-    private static String host = "localhost";
-    private static int port = 1234;
-    private String userName;
+    /*private String host = "localhost";
+    private int port = 1234;*/
     private Socket socket;
     private PrintWriter pr;
     private BufferedReader br;
 
-    public Client(Socket socket, String username) {
+    public Client(Socket socket) {
         try {
             this.socket = socket;
             this.pr = new PrintWriter(socket.getOutputStream());
@@ -27,28 +26,36 @@ public class Client {
 
     public void sendMessages() {
         String message = "";
-        try {
-            while ((message = br.readLine()) != null) {
-                pr.println(message);
-                pr.flush();
-                System.out.println("Client: " + br.readLine());
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        while (socket.isConnected()) {
+            System.out.println("Enter message: ");
+            Scanner sc = new Scanner(System.in);
+            message = sc.nextLine();
+
+            pr.println(message);
+            pr.flush();
+            System.out.println("Client: " + message);
         }
     }
 
-    public void menu(){
+    public void receiveMessages(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String message = br.readLine();
+                    System.out.println("Message Received: " + message);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
-    public static void main(String[] args) throws IOException {
-        // handle exception
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        System.out.print("Please enter username: ");
-        String userName = br.readLine();
 
-        Socket socket = new Socket(host, port);
-        Client client = new Client(socket, userName);
+    public static void main(String[] args) throws IOException {
+        Socket socket = new Socket("localhost", 1234);
+        Client client = new Client(socket);
+        client.receiveMessages();
         client.sendMessages();
     }
 }
