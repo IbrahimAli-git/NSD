@@ -33,10 +33,19 @@ public class ClientThreadHandler implements Runnable {
                 printMessage(message);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            close();
         }
     }
 
+    public void close() {
+        try {
+            if(socket != null)  socket.close();
+            if(printWriter != null) printWriter.close();
+            if (bufferedReader != null) bufferedReader.close();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 
     public void printMessage(String message) {
         for (ClientThreadHandler clientThreadHandler : clientThreadHandlers) {

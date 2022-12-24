@@ -7,9 +7,9 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Server {
-    private static final int port = 1234;
     private ServerSocket serverSocket;
 
     public Server(ServerSocket serverSocket) {
@@ -18,7 +18,7 @@ public class Server {
 
     public void run() {
         try {
-            while(!serverSocket.isClosed()){
+            while (!serverSocket.isClosed()) {
                 Socket clientSocket = serverSocket.accept();
                 ClientThreadHandler clientThreadHandler = new ClientThreadHandler(clientSocket);
                 Thread thread = new Thread(clientThreadHandler);
@@ -26,14 +26,32 @@ public class Server {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            close();
         }
+    }
+
+    public void close() {
+        try {
+            if (serverSocket != null) {
+                serverSocket.close();
+            }
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void menu(){
+
     }
 
     public static void main(String[] args) throws IOException {
         // Handle malformed requests
+        System.out.println("Please enter port");
+        Scanner sc = new Scanner(System.in);
+        int port = sc.nextInt();
         ServerSocket serverSocket = new ServerSocket(port);
-        Server server = new Server(serverSocket);
+        Server server;
+        server = new Server(serverSocket);
         server.run();
     }
 }
