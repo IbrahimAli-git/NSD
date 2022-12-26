@@ -11,66 +11,79 @@ public class Client {
     private Socket socket;
     private PrintWriter pr;
     private BufferedReader br;
+    private String username;
 
     public Client() {
     }
 
-    public Client(Socket socket) {
+    public Client(Socket socket, String username) {
         try {
             this.socket = socket;
             this.pr = new PrintWriter(socket.getOutputStream());
             this.br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            this.username = username;
         } catch (IOException e) {
-            e.printStackTrace();
+            close();
         }
     }
 
     public void sendMessages() {
         String message = "";
+        Scanner sc = new Scanner(System.in);
+
         while (socket.isConnected()) {
-            System.out.println("Enter message: ");
-            Scanner sc = new Scanner(System.in);
+            System.out.println("Enter message or exit: ");
             message = sc.nextLine();
 
+            if (message.equals("exit")) break;
+
+            FileHandler.writeToFile(message);
             pr.println(message);
             pr.flush();
-            System.out.println("Client: " + message);
+            System.out.println(username + ": " + message);
         }
+
+        System.out.println("Would you like to read the messages?(y/n)");
+        message = sc.nextLine();
+        if (message.equals("y")) FileHandler.readFromFile();
     }
 
-    public void receiveMessages(){
-        ReadThread readThread = new ReadThread(socket);
-        Thread thread = new Thread(readThread);
-        thread.start();
+    public void receiveMessages() {
+//        new Thread(new ReadThread(socket)).start();
+        new Thread(() -> {
+            try {
+                String message = br.readLine();
+                System.out.println("Message: " + message);
+            } catch (IOException e) {
+                close();
+            }
+        }).start();
     }
 
-    public void close(){
+    public void close() {
         try {
-            if(socket != null)  socket.close();
-            if(pr != null) pr.close();
+            if (socket != null) socket.close();
+            if (pr != null) pr.close();
             if (br != null) br.close();
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
-    public void menu()  {
-        System.out.println("Please enter host and port: ");
+
+    public static void main(String[] args) throws IOException {
         Scanner sc = new Scanner(System.in);
+        System.out.println("Please enter username: ");
+        String username = sc.nextLine();
+
+        System.out.println("Please enter host and port: ");
         String hostName = sc.nextLine();
         int port = sc.nextInt();
 
-        try {
-            Socket socket = new Socket(hostName, port);
-            Client client = new Client(socket);
-            client.receiveMessages();
-            client.sendMessages();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        Socket socket = new Socket(hostName, port);
+        Client client = new Client(socket, username);
+        client.receiveMessages();
+        client.sendMessages();
     }
 
-    public static void main(String[] args)  {
-        Client client = new Client();
-        client.menu();
-    }
 }

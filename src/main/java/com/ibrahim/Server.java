@@ -11,12 +11,14 @@ import java.util.Scanner;
 
 public class Server {
     private ServerSocket serverSocket;
+    private static int numOfClients = 0;
 
     public Server(ServerSocket serverSocket) {
         this.serverSocket = serverSocket;
     }
 
     public void run() {
+        System.out.println("Running server...");
         try {
             while (!serverSocket.isClosed()) {
                 Socket clientSocket = serverSocket.accept();
@@ -40,18 +42,22 @@ public class Server {
         }
     }
 
-    public void menu(){
-
+    public static int initServerSocket() {
+        System.out.println("Please enter port: ");
+        Scanner sc = new Scanner(System.in);
+        int port = 0;
+        while (true) {
+            port = sc.nextInt();
+            if (port > 1023 && port < 65535) break;
+            System.out.println("Please enter again:");
+        }
+        return port;
     }
 
     public static void main(String[] args) throws IOException {
         // Handle malformed requests
-        System.out.println("Please enter port");
-        Scanner sc = new Scanner(System.in);
-        int port = sc.nextInt();
-        ServerSocket serverSocket = new ServerSocket(port);
-        Server server;
-        server = new Server(serverSocket);
+        ServerSocket serverSocket = new ServerSocket(initServerSocket());
+        Server server = new Server(serverSocket);
         server.run();
     }
 }

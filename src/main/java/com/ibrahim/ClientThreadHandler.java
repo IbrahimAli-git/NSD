@@ -12,6 +12,7 @@ public class ClientThreadHandler implements Runnable {
     private Socket socket;
     private PrintWriter printWriter;
     private BufferedReader bufferedReader;
+    private String username;
 
     public ClientThreadHandler(Socket socket) {
         try {
@@ -30,6 +31,7 @@ public class ClientThreadHandler implements Runnable {
         try {
             while (socket.isConnected()) {
                 message = bufferedReader.readLine();
+
                 printMessage(message);
             }
         } catch (IOException e) {
@@ -49,6 +51,7 @@ public class ClientThreadHandler implements Runnable {
 
     public void printMessage(String message) {
         for (ClientThreadHandler clientThreadHandler : clientThreadHandlers) {
+            if (clientThreadHandler == this) continue;
             clientThreadHandler.printWriter.println(message);
             clientThreadHandler.printWriter.flush();
         }
