@@ -13,10 +13,12 @@ public class Server {
     private ServerSocket serverSocket;
     private static int numOfClients = 0;
 
+    // Constructor initialises the ServerSocket
     public Server(ServerSocket serverSocket) {
         this.serverSocket = serverSocket;
     }
 
+    // For running the server and accepting connections
     public void run() {
         System.out.println("Running server...");
         try {
@@ -32,6 +34,7 @@ public class Server {
         }
     }
 
+    // For closing ServerSocket stream
     public void close() {
         try {
             if (serverSocket != null) {
@@ -42,6 +45,8 @@ public class Server {
         }
     }
 
+    // For initialising ServerSocket with the correct port
+    // Ensures the port number entered is free to use and not reserved
     public static int initServerSocket() {
         System.out.println("Please enter port: ");
         Scanner sc = new Scanner(System.in);
@@ -54,6 +59,7 @@ public class Server {
         return port;
     }
 
+    // Main method for initialising ServerSocket/Server program
     public static void main(String[] args) throws IOException {
         // Handle malformed requests
         ServerSocket serverSocket = new ServerSocket(initServerSocket());
