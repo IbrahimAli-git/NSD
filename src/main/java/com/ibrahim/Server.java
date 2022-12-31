@@ -1,6 +1,7 @@
 package com.ibrahim;
 
 
+import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -21,8 +22,10 @@ public class Server {
     // For running the server and accepting connections
     public void run() {
         System.out.println("Running server...");
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter end to end server");
         try {
-            while (!serverSocket.isClosed()) {
+            while (!sc.next().equals("end")) {
                 Socket clientSocket = serverSocket.accept();
                 ClientThreadHandler clientThreadHandler = new ClientThreadHandler(clientSocket);
                 Thread thread = new Thread(clientThreadHandler);
@@ -55,7 +58,6 @@ public class Server {
             port = sc.nextInt();
             if ((port > 1023 && port < 65535)) break;
 
-
             System.out.println("Please enter again:");
         }
         return port;
@@ -67,6 +69,8 @@ public class Server {
             ServerSocket serverSocket = new ServerSocket(initServerSocket());
             Server server = new Server(serverSocket);
             server.run();
+            server.close();
+            FileHandler.clearFile();
         } catch (IOException e) {
             System.out.println("Please run server again");
         }

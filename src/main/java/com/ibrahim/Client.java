@@ -55,12 +55,11 @@ public class Client {
     public static int initPort() {
         System.out.println("Please enter port: ");
         int port = 0;
-        while (true) {
+        do {
             Scanner sc = new Scanner(System.in);
             port = sc.nextInt();
-            if (port > 1023 && port < 65535) break;
             System.out.println("Please enter again:");
-        }
+        } while (port > 1023 && port < 65535);
         return port;
     }
 
@@ -104,7 +103,6 @@ public class Client {
             client.close();
         } catch (IOException e) {
             System.out.println("Please restart client");
-            System.exit(0);
         }
     }
 }

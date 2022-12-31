@@ -23,7 +23,7 @@ from multiple clients. I implemented this using a ServerSocket; the user was ask
 the port number to run the server on. This port number was verified before being accepted.
 This allowed for the server to run without errors. I then created a class called ClientThreadHandler.
 This class implemented the runnable interface and allowed for communication between the Client class
-and the server. It also allowed for multiple instances of it to run concurrently allowing
+and the server. It also allowed for multiple instances of the client class to run concurrently allowing
 for multiple clients to connect with the server in parallel.
 
 C2. Quality of my console  
@@ -54,4 +54,5 @@ References:
 2. https://youtu.be/gLfuZrrfKes
 3. https://www.codejava.net/java-se/networking/how-to-create-a-chat-console-application-in-java-using-socket
 4. https://www.freecodecamp.org/news/how-to-write-a-good-readme-file/
+5. https://stackoverflow.com/questions/6994518/how-to-delete-the-content-of-text-file-without-deleting-itself 
 

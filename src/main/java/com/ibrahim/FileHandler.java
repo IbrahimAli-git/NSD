@@ -15,6 +15,29 @@ public class FileHandler {
     public FileHandler() {
     }
 
+    // For writing chat messages to the file
+    // Try with resources is used to simultaneously read from a stream and close it
+    public static void writeToFile() {
+        synchronized (fileName) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+                for (String message : list) {
+                    writer.write(message);
+                    writer.newLine();
+                    writer.flush();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // For adding chat messages to the arraylist
+    public static void addToList(String message) {
+        synchronized (list) {
+            list.add(message);
+        }
+    }
+
     // Prints all the chat messages to the screen
     public static void readFromFile() {
         synchronized (fileName) {
@@ -30,25 +53,13 @@ public class FileHandler {
         }
     }
 
-    // For adding chat messages to the arraylist
-    public static void addToList(String message) {
-        synchronized (list) {
-            list.add(message);
-        }
-    }
-
-    // For writing chat messages to the file
-    // Try with resources is used to simultaneously read from a stream and close it
-    public static void writeToFile() {
-        synchronized (fileName) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
-                for (String message : list) {
-                    writer.write(message);
-                    writer.flush();
-                    writer.newLine();
-                }
+    public static void clearFile(){
+        if (!fileName.isEmpty()){
+            try (PrintWriter pw = new PrintWriter(new FileWriter(fileName))) {
+                pw.write("");
+                pw.flush();
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
             }
         }
     }
