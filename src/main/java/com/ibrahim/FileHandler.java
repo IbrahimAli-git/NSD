@@ -17,20 +17,16 @@ public class FileHandler {
 
     // Prints all the chat messages to the screen
     public static void readFromFile() {
-        /*System.out.println("Reading from file...");
-        for (String s : list) {
-            System.out.println(s);
-        }
-        System.out.println();*/
-        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-            String s;
-
-            while((s = br.readLine()) != null){
-                System.out.println(s);
+        synchronized (fileName) {
+            try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+                String s;
+                while ((s = br.readLine()) != null) {
+                    System.out.println(s);
+                }
+                System.out.println();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            System.out.println();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 

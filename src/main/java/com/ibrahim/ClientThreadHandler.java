@@ -1,42 +1,47 @@
 package com.ibrahim;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
-import java.util.ArrayList;
 
 public class ClientThreadHandler implements Runnable {
-    // For storing ClientThreadHandler objects
-    // It is static so only one instance of it is created
-    private static ArrayList<ClientThreadHandler> clientThreadHandlers = new ArrayList<>();
+    private static int numOfClients = 0;
     private Socket socket;
-    private PrintWriter printWriter;
+    private BufferedWriter bufferedWriter;
     private BufferedReader bufferedReader;
     private String username;
+
+    // Default Constructor
+    public ClientThreadHandler() {
+    }
 
     // For initialising ClientThreadHandler objects and streams
     public ClientThreadHandler(Socket socket) {
         try {
             this.socket = socket;
-            this.printWriter = new PrintWriter(socket.getOutputStream());
+            this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            clientThreadHandlers.add(this);
+            this.username = bufferedReader.readLine();
+            System.out.println(username + " entered the channel");
+            System.out.println("Client number: " + ++numOfClients);
         } catch (IOException e) {
-            e.printStackTrace();
+            close();
         }
     }
 
     // For running each client handler
+    // It prints the messages of each client to the shared server window
+    // It also saves each message to a shared file
     @Override
     public void run() {
         String message;
         try {
-            while (socket.isConnected()) {
-                message = bufferedReader.readLine();
-                printMessage(message);
+            while ((message = bufferedReader.readLine()) != null) {
+                System.out.println(username + ": " + message);
+                FileHandler.addToList(username + ": " + message);
             }
+            System.out.println(username + " exited the channel");
+            System.out.println("Client number: " + --numOfClients);
+            FileHandler.writeToFile();
         } catch (IOException e) {
             close();
         }
@@ -45,22 +50,11 @@ public class ClientThreadHandler implements Runnable {
     // For closing all the streams
     public void close() {
         try {
-            clientThreadHandlers.remove(this);
-            if(socket != null)  socket.close();
-            if(printWriter != null) printWriter.close();
+            if (socket != null) socket.close();
+            if (bufferedWriter != null) bufferedWriter.close();
             if (bufferedReader != null) bufferedReader.close();
         } catch (IOException e) {
             System.out.println(e.getMessage());
-        }
-    }
-
-    // Prints the messages to all other clients
-    public void printMessage(String message) {
-        for (ClientThreadHandler clientThreadHandler : clientThreadHandlers) {
-            if (clientThreadHandler != this) {
-                clientThreadHandler.printWriter.println(message);
-                clientThreadHandler.printWriter.flush();
-            }
         }
     }
 }

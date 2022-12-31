@@ -1,17 +1,17 @@
 package com.ibrahim;
 
-import java.io.BufferedReader;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Server {
     private ServerSocket serverSocket;
-    private static int numOfClients = 0;
+
+    // Default Constructor
+    public Server() {
+    }
 
     // Constructor initialises the ServerSocket
     public Server(ServerSocket serverSocket) {
@@ -41,7 +41,7 @@ public class Server {
                 serverSocket.close();
             }
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Please run the program again");
         }
     }
 
@@ -53,17 +53,22 @@ public class Server {
         int port = 0;
         while (true) {
             port = sc.nextInt();
-            if (port > 1023 && port < 65535) break;
+            if ((port > 1023 && port < 65535)) break;
+
+
             System.out.println("Please enter again:");
         }
         return port;
     }
 
-    // Main method for initialising ServerSocket/Server program
-    public static void main(String[] args) throws IOException {
-        // Handle malformed requests
-        ServerSocket serverSocket = new ServerSocket(initServerSocket());
-        Server server = new Server(serverSocket);
-        server.run();
+    // Main method for initialising Server program
+    public static void main(String[] args) {
+        try {
+            ServerSocket serverSocket = new ServerSocket(initServerSocket());
+            Server server = new Server(serverSocket);
+            server.run();
+        } catch (IOException e) {
+            System.out.println("Please run server again");
+        }
     }
 }
