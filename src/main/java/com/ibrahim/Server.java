@@ -1,7 +1,5 @@
 package com.ibrahim;
 
-
-import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -22,16 +20,13 @@ public class Server {
     // For running the server and accepting connections
     public void run() {
         System.out.println("Running server...");
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Enter end to end server");
         try {
-            while (!sc.next().equals("end")) {
+            while (!serverSocket.isClosed()) {
                 Socket clientSocket = serverSocket.accept();
                 ClientThreadHandler clientThreadHandler = new ClientThreadHandler(clientSocket);
                 Thread thread = new Thread(clientThreadHandler);
                 thread.start();
             }
-
         } catch (IOException e) {
             close();
         }
@@ -70,7 +65,6 @@ public class Server {
             Server server = new Server(serverSocket);
             server.run();
             server.close();
-            FileHandler.clearFile();
         } catch (IOException e) {
             System.out.println("Please run server again");
         }

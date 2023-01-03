@@ -26,7 +26,7 @@ public class FileHandler {
                     writer.flush();
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -47,17 +47,6 @@ public class FileHandler {
                     System.out.println(s);
                 }
                 System.out.println();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public static void clearFile(){
-        if (!fileName.isEmpty()){
-            try (PrintWriter pw = new PrintWriter(new FileWriter(fileName))) {
-                pw.write("");
-                pw.flush();
             } catch (IOException e) {
                 System.out.println(e.getMessage());
             }

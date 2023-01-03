@@ -35,7 +35,8 @@ view the messages of the channel they have subscribed to.
 
 C3. Demonstration  
 The demonstration is the third core functionality of the assignment. This consists of a video
-recording which demonstrates my working program. The link to the video is here:   .
+recording which demonstrates my working program. This can be found in the resources' folder. It can also be viewed on YouTube 
+using this link: https://youtu.be/kpK2KHBGPSM 
 
 C4. Extensions  
 The extensions are the fourth core functionality of the program. My program does not consist of any extensions.
@@ -47,7 +48,6 @@ How to Run the Program:
 4. Then run the server and input the chosen port number.
 5. Then run the client and input the chosen host and port number.
 6. To run multiple instances of the client, go to configurations and make sure allow multiple instances is selected. Then simply run the class again.
-7. To run multiple instances of the server, for multiple chat channels, make sure allow multiple instances is selected. Then simply run the class again.
 
 References:  
 1. https://shuspace.shu.ac.uk/ultra/courses/_339673_1/cl/outline

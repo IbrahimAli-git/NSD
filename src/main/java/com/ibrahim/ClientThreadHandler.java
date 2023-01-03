@@ -38,10 +38,10 @@ public class ClientThreadHandler implements Runnable {
             while ((message = bufferedReader.readLine()) != null) {
                 System.out.println(username + ": " + message);
                 FileHandler.addToList(username + ": " + message);
+                FileHandler.writeToFile();
             }
             System.out.println(username + " exited the channel");
             System.out.println("Client number: " + --numOfClients);
-            FileHandler.writeToFile();
         } catch (IOException e) {
             close();
         }

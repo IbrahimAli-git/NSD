@@ -41,7 +41,7 @@ public class Client {
                 bufferedWriter.newLine();
                 bufferedWriter.flush();
             } catch (IOException e) {
-                System.out.println("Please re-enter massage");
+                System.out.println("Please re-enter message");
             }
         }
         System.out.println("Would you like to read the messages?(y/n)");
@@ -55,11 +55,16 @@ public class Client {
     public static int initPort() {
         System.out.println("Please enter port: ");
         int port = 0;
-        do {
-            Scanner sc = new Scanner(System.in);
-            port = sc.nextInt();
-            System.out.println("Please enter again:");
-        } while (port > 1023 && port < 65535);
+        try {
+            while (true) {
+                Scanner sc = new Scanner(System.in);
+                port = sc.nextInt();
+                if ((port > 1023 && port < 65535)) break;
+                System.out.println("Please enter again:");
+            }
+        } catch (Exception e){
+            System.out.println("Please restart client");
+        }
         return port;
     }
 
